@@ -1,4 +1,4 @@
-add_executable(App main.cpp)
+add_executable(App main.cpp utility.cpp)
 
 cmake_minimum_required(VERSION 3.0...3.25)
 project(
