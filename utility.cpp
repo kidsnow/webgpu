@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cassert>
+#include <vector>
 
 WGPUAdapter requestAdapterSync(
     WGPUInstance instance,
@@ -111,4 +112,38 @@ WGPUDevice requestDeviceSync(
     assert(userData.requestEnded);
 
     return userData.device;
+}
+
+void inspectDevice(WGPUDevice device)
+{
+    std::vector<WGPUFeatureName> features;
+    size_t featureCount = wgpuDeviceEnumerateFeatures(device, nullptr);
+    features.resize(featureCount);
+    wgpuDeviceEnumerateFeatures(device, features.data());
+
+    std::cout << "Device features:" << std::endl;
+    std::cout << std::hex;
+    for (auto f : features)
+    {
+        std::cout << " - 0x" << f << std::endl;
+    }
+    std::cout << std::dec;
+
+    WGPUSupportedLimits limits = {};
+    limits.nextInChain = nullptr;
+
+#ifdef WGPU_BACKEND_DAWN
+    bool success = wgpuDeviceGetLimits(device, &limits) == WGPUStatus_Success;
+#else
+    bool success = wgpuDeviceGetLimits(device, &limits);
+#endif
+
+    if (success)
+    {
+        std::cout << "Device limits:" << std::endl;
+        std::cout << " - maxTextureDimension1D: " << limits.limits.maxTextureDimension1D << std::endl;
+        std::cout << " - maxTextureDimension2D: " << limits.limits.maxTextureDimension2D << std::endl;
+        std::cout << " - maxTextureDimension3D: " << limits.limits.maxTextureDimension3D << std::endl;
+        std::cout << " - maxTextureArrayLayers: " << limits.limits.maxTextureArrayLayers << std::endl;
+    }
 }

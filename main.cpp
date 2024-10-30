@@ -117,7 +117,12 @@ int main()
     deviceDesc.requiredLimits = nullptr; // we do not require any specific limit
     deviceDesc.defaultQueue.nextInChain = nullptr;
     deviceDesc.defaultQueue.label = "The default queue";
-    deviceDesc.deviceLostCallback = nullptr;
+    deviceDesc.deviceLostCallback = [](WGPUDeviceLostReason reason, char const* message, void* /* pUserData */)
+    {
+        std::cout << "Device lost: reason " << reason;
+        if (message) std::cout << " (" << message << ")";
+        std::cout << std::endl;
+    };
 
     WGPUDevice device = requestDeviceSync(adapter, &deviceDesc);
 
@@ -126,6 +131,8 @@ int main()
     // adapter can be released before the device and
     // we never use it again after getting device.
     wgpuAdapterRelease(adapter);
+
+
 
 
     wgpuDeviceRelease(device);
