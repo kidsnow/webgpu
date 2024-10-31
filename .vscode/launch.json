@@ -9,8 +9,16 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/Debug/App.exe",
-            "cwd": "${workspaceFolder}/build/Debug/",
+            "cwd": "${workspaceFolder}/build/Debug",
             "symbolSearchPath": "${workspaceFolder}/build/Debug",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "macOS Debug",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/App",
+            "cwd": "${workspaceFolder}/build",
             "console": "integratedTerminal"
         }
     ]
